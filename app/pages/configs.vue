@@ -33,6 +33,33 @@ function collapseAll() {
   configsOpenState.value = configsOpenState.value.map(() => false)
 }
 
+function downloadConfig() {
+  const configs = payload.value.configs.map((config) => {
+    const { index, name, files, ignores, rules, plugins, languageOptions, linterOptions, settings, processor } = config
+    return {
+      index: index + 1,
+      name: name || `anonymous #${index + 1}`,
+      files: files ?? [],
+      ignores: ignores ?? [],
+      plugins: plugins ? Object.keys(plugins) : [],
+      rules: rules ?? {},
+      ...(languageOptions ? { languageOptions } : {}),
+      ...(linterOptions ? { linterOptions } : {}),
+      ...(settings ? { settings } : {}),
+      ...(processor ? { processor } : {}),
+    }
+  })
+
+  const json = JSON.stringify(configs, null, 2)
+  const blob = new Blob([json], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = 'eslint-config.json'
+  link.click()
+  URL.revokeObjectURL(url)
+}
+
 const filteredConfigs = shallowRef<FlatConfigItem[]>([])
 const fileMatchResult = shallowRef<MatchedFile | null>(null)
 
@@ -341,6 +368,14 @@ onMounted(async () => {
           @click="collapseAll"
         >
           Collapse All
+        </button>
+        <button
+          btn-action px3
+          title="Download full ESLint config as JSON"
+          @click="downloadConfig()"
+        >
+          <div i-ph-download-simple-duotone />
+          Export Config
         </button>
       </div>
 

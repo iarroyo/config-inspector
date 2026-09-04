@@ -1,17 +1,20 @@
 {
-  "name": "@eslint/config-inspector",
+  "name": "@iarroyoescobar/eslint-inspector",
   "type": "module",
-  "version": "3.4.0",
+  "version": "0.0.3",
   "packageManager": "pnpm@11.25.0",
   "description": "A visual tool for inspecting and understanding your ESLint flat configs",
   "license": "Apache-2.0",
   "funding": "https://opencollective.com/eslint",
-  "homepage": "https://github.com/eslint/config-inspector#readme",
+  "homepage": "https://github.com/iarroyo/config-inspector#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/eslint/config-inspector.git"
+    "url": "git+https://github.com/iarroyo/config-inspector.git"
   },
-  "bugs": "https://github.com/eslint/config-inspector/issues",
+  "bugs": "https://github.com/iarroyo/config-inspector/issues",
+  "publishConfig": {
+    "access": "public"
+  },
   "bin": {
     "@eslint/config-inspector": "./bin.mjs",
     "eslint-config-inspector": "./bin.mjs"

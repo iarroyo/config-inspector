@@ -96,6 +96,65 @@ function resetFilters() {
   filters.state = 'using'
   filters.status = 'active'
 }
+
+function escapeCsvCell(value: string | undefined): string {
+  const str = value ?? ''
+  if (str.includes(',') || str.includes('"') || str.includes('\n'))
+    return `"${str.replace(/"/g, '""')}"`
+  return str
+}
+
+function downloadReport() {
+  const headers = ['Rule Name', 'Plugin', 'Level', 'Applied By', 'Fixable', 'Recommended', 'Deprecated', 'Description', 'Docs URL']
+  const rows: string[][] = []
+
+  for (const rule of filtered.value) {
+    const states = payload.value.ruleToState.get(rule.name)
+    if (states?.length) {
+      for (const state of states) {
+        const config = payload.value.configs[state.configIndex]
+        const globs = config?.files?.flat().join(', ')
+        const appliedBy = config?.name || (globs ? `anonymous #${state.configIndex + 1} (${globs})` : `anonymous #${state.configIndex + 1}`)
+        rows.push([
+          rule.name,
+          rule.plugin ?? '',
+          state.level,
+          appliedBy,
+          rule.fixable ? 'Yes' : 'No',
+          rule.docs?.recommended ? 'Yes' : 'No',
+          rule.deprecated ? 'Yes' : 'No',
+          rule.docs?.description ?? '',
+          rule.docs?.url ?? '',
+        ])
+      }
+    }
+    else {
+      rows.push([
+        rule.name,
+        rule.plugin ?? '',
+        '',
+        '',
+        rule.fixable ? 'Yes' : 'No',
+        rule.docs?.recommended ? 'Yes' : 'No',
+        rule.deprecated ? 'Yes' : 'No',
+        rule.docs?.description ?? '',
+        rule.docs?.url ?? '',
+      ])
+    }
+  }
+
+  const csv = [headers, ...rows]
+    .map(row => row.map(escapeCsvCell).join(','))
+    .join('\n')
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = 'eslint-rules-report.csv'
+  link.click()
+  URL.revokeObjectURL(url)
+}
 </script>
 
 <template>
@@ -194,8 +253,9 @@ function resetFilters() {
         </button>
       </div>
 
-      <div v-if="!bpSm" flex="~ gap-1">
+      <div flex="~ gap-1">
         <button
+          v-if="!bpSm"
           btn-action
           :class="{ 'btn-action-active': stateStorage.viewType === 'list' }"
           @click="stateStorage.viewType = 'list'"
@@ -204,12 +264,21 @@ function resetFilters() {
           List
         </button>
         <button
+          v-if="!bpSm"
           btn-action
           :class="{ 'btn-action-active': stateStorage.viewType === 'grid' }"
           @click="stateStorage.viewType = 'grid'"
         >
           <div i-ph-grid-four-duotone />
           Grid
+        </button>
+        <button
+          btn-action
+          title="Download CSV report of filtered rules"
+          @click="downloadReport()"
+        >
+          <div i-ph-download-simple-duotone />
+          Export
         </button>
       </div>
     </div>

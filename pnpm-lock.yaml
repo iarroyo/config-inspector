@@ -72,18 +72,6 @@ catalogs:
     '@vueuse/nuxt':
       specifier: ^14.4.0
       version: 14.4.0
-    ansis:
-      specifier: ^4.3.1
-      version: 4.3.1
-    cac:
-      specifier: ^7.0.0
-      version: 7.0.0
-    chokidar:
-      specifier: ^5.0.0
-      version: 5.0.0
-    devframe:
-      specifier: ^0.9.8
-      version: 0.9.8
     eslint:
       specifier: ^10.9.1
       version: 10.9.1
@@ -96,9 +84,6 @@ catalogs:
     fuse.js:
       specifier: ^7.5.0
       version: 7.5.0
-    jiti:
-      specifier: ^2.7.0
-      version: 2.7.0
     lint-staged:
       specifier: ^17.4.1
       version: 17.4.1
@@ -138,9 +123,6 @@ catalogs:
     textmate-grammar-glob:
       specifier: ^0.0.1
       version: 0.0.1
-    tinyglobby:
-      specifier: ^0.2.17
-      version: 0.2.17
     tsdown:
       specifier: ^0.22.14
       version: 0.22.14
@@ -165,22 +147,22 @@ importers:
   .:
     dependencies:
       ansis:
-        specifier: 'catalog:'
+        specifier: ^4.3.1
         version: 4.3.1
       cac:
-        specifier: 'catalog:'
+        specifier: ^7.0.0
         version: 7.0.0
       chokidar:
-        specifier: 'catalog:'
+        specifier: ^5.0.0
         version: 5.0.0
       devframe:
-        specifier: 'catalog:'
+        specifier: ^0.9.8
         version: 0.9.8(cac@7.0.0)(srvx@0.11.22)
       jiti:
-        specifier: 'catalog:'
+        specifier: ^2.7.0
         version: 2.7.0
       tinyglobby:
-        specifier: 'catalog:'
+        specifier: ^0.2.17
         version: 0.2.17
     devDependencies:
       '@antfu/eslint-config':
